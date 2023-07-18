@@ -6,6 +6,10 @@ When editing an animation, it is often necessary to make adjustments to the Rota
 
 This addon is equivalent to the [`Select Attributes`](https://help.autodesk.com/view/MAYAUL/2023/ENU/?guid=GUID-4C99B1CD-442F-4D15-AFB7-FF8D802B4D00#GUID-4C99B1CD-442F-4D15-AFB7-FF8D802B4D00__d1829e708) tool in Maya, while Maya exposes these operations through an GUI instead of hotkeys.
 
+## Preview
+
+![](docs/images/01-minimal.gif)
+
 ## Installation
 
 To install the addon:
@@ -35,6 +39,8 @@ You may want to reset the highlights with:
 - `Alt` + `Q`: Clear all highlighted channels by unselecting/showing/unlocking all channels.
 - `Shift` + `Alt` + `Q`: Unselect/hide/lock all channels.
 
+![](docs/images/02-basic.gif)
+
 If you want to keep the state of all other channels, you can hold `Shift` while pressing the hotkeys:
 - `Shift` + `Alt` + {`A`, `S`, `D`}: Highlight the {`X Location`, `Y Location`, `Z Location`} channels.
 - `Shift` + `Alt` + {`Z`, `X`, `C`}: Highlight the {`X Euler Rotation`, `Y Euler Rotation`, `Z Euler Rotation`} channels.
@@ -43,6 +49,12 @@ If you want to keep the state of all other channels, you can hold `Shift` while 
 > All channels that are not highlighted will keep their original states (when `Shift` is pressed).
 
 For example, you may want to highlight `X Location` and `X Euler Rotation` channels at the same time. To do so, you can use the following hotkeys: `Alt` + `A` and then `Shift` + `Alt` + `Z`.
+
+![](docs/images/03-modifier.gif)
+
+The hotkeys also work on bones:
+
+![](docs/images/04-bones.gif)
 
 Please note that:
 - the operations only apply to selected objects.
