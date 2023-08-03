@@ -62,19 +62,13 @@ OPERATORS = (
     ("Highlight Y Scale",          "Y Scale",          "X"),
     ("Highlight Z Scale",          "Z Scale",          "C"),
     ("Clear Highlight",            "(Clear)",          "V"),
-    ("Highlight Translations",     "(Loc)",            "T"),
-    ("Highlight Rotations",        "(Rot)",            "R"),
-    ("Highlight Scales",           "(Scale)",          "F"),
 )
 
 def highlight_channel(channel_name):
-    def fc_match(fc, channel_names):
-        """Check if the fcurve matches the channel names"""
-        channels = [CHANNELS[channel_name] for channel_name in channel_names]
-        return any(
-            fc.data_path.endswith(channel[0]) and fc.array_index == channel[1] # endswith is required for bones
-            for channel in channels
-        )
+    def fc_match(fc, channel_name):
+        """Check if the fcurve matches the channel name"""
+        channel = CHANNELS[channel_name]
+        return fc.data_path.endswith(channel[0]) and fc.array_index == channel[1] # endswith is required for bones
     fcurves = [
         fc
         for selected_object in bpy.context.selected_objects
@@ -88,18 +82,10 @@ def highlight_channel(channel_name):
             fc.select = False
             fc.hide = not is_all_hidden
         return
-    elif channel_name == "(Loc)":
-        channel_names = ["X Location", "Y Location", "Z Location"]
-    elif channel_name == "(Rot)":
-        channel_names = ["X Euler Rotation", "Y Euler Rotation", "Z Euler Rotation"]
-    elif channel_name == "(Scale)":
-        channel_names = ["X Scale", "Y Scale", "Z Scale"]
-    else:
-        channel_names = [channel_name]
     # Case 2: Toggle highlight of a specific channel
-    is_some_targets_hidden = any(fc.hide and fc_match(fc, channel_names) for fc in fcurves)
+    is_some_targets_hidden = any(fc.hide and fc_match(fc, channel_name) for fc in fcurves)
     for fc in fcurves:
-        if fc_match(fc, channel_names):
+        if fc_match(fc, channel_name):
             fc.select = is_some_targets_hidden
             fc.hide = not is_some_targets_hidden
 
