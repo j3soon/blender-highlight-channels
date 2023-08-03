@@ -1,6 +1,6 @@
 """
 Highlight the specified animation channels across multiple objects by
-unselecting/hiding/locking all other channels.
+unselecting/hiding all other channels.
 """
 
 # This file is part of Blender Highlight Channels.
@@ -23,7 +23,7 @@ unselecting/hiding/locking all other channels.
 bl_info = {
     "name": "Highlight Channels",
     "description": "Highlight the specified animation channels across "
-        "multiple objects by unselecting/hiding/locking all other channels.",
+        "multiple objects by unselecting/hiding all other channels.",
     "author": "Johnson Sun, Jenny Sun",
     "version": (0, 1, 0),
     "blender": (2, 80, 0), # Will not work in Blender 2.79 and earlier versions due to scripting API changes
@@ -73,7 +73,7 @@ def highlight_channel(channel_name, modifier):
             continue
         fcurves = action.fcurves
         for fc in fcurves:
-            # Loop through all fcurves, select/lock/hide according to whether the channel name matches or not
+            # Loop through all fcurves, select/hide according to whether the channel name matches or not
             # Alternatively, loop through all groups and channels:
             # - for group in action.groups
             # - for channel in group.channels
@@ -82,17 +82,16 @@ def highlight_channel(channel_name, modifier):
             match = (fc.data_path.endswith(channel[0]) and (fc.array_index == channel[1])) # endswith is required for bones
             if channel_name == "None":
                 fc.select = False
-                fc.lock = fc.hide = modifier
+                fc.hide = modifier
                 continue
             if modifier:
                 if not match:
                     continue
                 fc.select = not fc.select
-                fc.lock = not fc.lock
                 fc.hide = not fc.hide
             else:
                 fc.select = match
-                fc.lock = fc.hide = not match
+                fc.hide = not match
 
 class HighlightOperator(bpy.types.Operator):
     bl_idname = "highlight_channels.highlight_channels"
