@@ -53,16 +53,16 @@ CHANNELS = {
 
 OPERATORS = (
     # (text, channel_name, hotkey)
-    ("Clear Highlight",            "None",             "Q"),
-    ("Highlight X Location",       "X Location",       "A"),
-    ("Highlight Y Location",       "Y Location",       "S"),
-    ("Highlight Z Location",       "Z Location",       "D"),
-    ("Highlight X Euler Rotation", "X Euler Rotation", "Z"),
-    ("Highlight Y Euler Rotation", "Y Euler Rotation", "X"),
-    ("Highlight Z Euler Rotation", "Z Euler Rotation", "C"),
-    ("Highlight X Scale",          "X Scale",          "ONE"),
-    ("Highlight Y Scale",          "Y Scale",          "TWO"),
-    ("Highlight Z Scale",          "Z Scale",          "THREE"),
+    ("Clear Highlight",            "None",             "V"),
+    ("Highlight X Location",       "X Location",       "Q"),
+    ("Highlight Y Location",       "Y Location",       "W"),
+    ("Highlight Z Location",       "Z Location",       "E"),
+    ("Highlight X Euler Rotation", "X Euler Rotation", "A"),
+    ("Highlight Y Euler Rotation", "Y Euler Rotation", "S"),
+    ("Highlight Z Euler Rotation", "Z Euler Rotation", "D"),
+    ("Highlight X Scale",          "X Scale",          "Z"),
+    ("Highlight Y Scale",          "Y Scale",          "X"),
+    ("Highlight Z Scale",          "Z Scale",          "C"),
 )
 
 def highlight_channel(channel_name, modifier):
