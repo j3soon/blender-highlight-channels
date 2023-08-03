@@ -65,42 +65,38 @@ OPERATORS = (
     ("Highlight Z Scale",          "Z Scale",          "C"),
 )
 
-def highlight_channel(channel_name, modifier):
-    selected_objects = bpy.context.selected_objects
-    for selected_object in selected_objects:
-        action = selected_object.animation_data.action
-        if not action:
+def highlight_channel(channel_name):
+    def fc_match(fc, channel_name):
+        """Check if the fcurve matches the channel name"""
+        channel = CHANNELS[channel_name]
+        return (fc.data_path.endswith(channel[0]) and (fc.array_index == channel[1])) # endswith is required for bones
+    fcurves = [
+        fc
+        for selected_object in bpy.context.selected_objects
+        if selected_object.animation_data and (action := selected_object.animation_data.action)
+        for fc in action.fcurves
+    ]
+    is_all_hidden = all(fc.hide for fc in fcurves)
+    is_some_targets_hidden = any(fc.hide and fc_match(fc, channel_name) for fc in fcurves)
+    for fc in fcurves:
+        # Loop through all fcurves, select/hide according to whether the channel name matches or not
+        if channel_name == "None":
+            # Case 1: Toggle highlight of all channels
+            fc.select = False
+            fc.hide = not is_all_hidden
             continue
-        fcurves = action.fcurves
-        for fc in fcurves:
-            # Loop through all fcurves, select/hide according to whether the channel name matches or not
-            # Alternatively, loop through all groups and channels:
-            # - for group in action.groups
-            # - for channel in group.channels
-            # - and then filter based on channel.data_path and channel.array_index
-            channel = CHANNELS[channel_name]
-            match = (fc.data_path.endswith(channel[0]) and (fc.array_index == channel[1])) # endswith is required for bones
-            if channel_name == "None":
-                fc.select = False
-                fc.hide = modifier
-                continue
-            if modifier:
-                if not match:
-                    continue
-                fc.select = not fc.select
-                fc.hide = not fc.hide
-            else:
-                fc.select = match
-                fc.hide = not match
+        # Case 2: Toggle highlight of a specific channel
+        if fc_match(fc, channel_name):
+            fc.select = is_some_targets_hidden
+            fc.hide = not is_some_targets_hidden
 
 class HighlightOperator(bpy.types.Operator):
     bl_idname = "highlight_channels.highlight_channels"
     bl_label = "Highlight Channels"
     channel_name: bpy.props.StringProperty()
-    modifier: bpy.props.BoolProperty()
 
     def execute(self, context):
-        highlight_channel(self.channel_name, self.modifier)
+        highlight_channel(self.channel_name)
         return {"FINISHED"}
 
 class HighlightMenu(bpy.types.Menu):
@@ -109,14 +105,12 @@ class HighlightMenu(bpy.types.Menu):
 
     def draw(self, context):
         layout: bpy.types.UILayout = self.layout
-        for (text, channel_name, hotkey), modifier in \
-            list(itertools.product(OPERATORS, [False, True])):
+        for (text, channel_name, hotkey) in OPERATORS:
             op = layout.operator(
                 HighlightOperator.bl_idname,
-                text=text+(" (Extend)" if modifier else ""),
+                text=text,
             )
             op.channel_name = channel_name
-            op.modifier = modifier
 
 def menu_func(self, context):
     layout: bpy.types.UILayout = self.layout
@@ -149,12 +143,11 @@ def register():
         ("Animation Channels", "EMPTY"), # The right-hand side that displays all channels
         ("Graph Editor", "GRAPH_EDITOR"), # The middle section that displays the curves
     ]
-    for (text, channel_name, hotkey), modifier, (name, space_type) in \
-        list(itertools.product(OPERATORS, [False, True], name_and_space_types)):
+    for (text, channel_name, hotkey), (name, space_type) in \
+        list(itertools.product(OPERATORS, name_and_space_types)):
         km = wm.keyconfigs.addon.keymaps.new(name=name, space_type=space_type)
-        kmi = km.keymap_items.new(HighlightOperator.bl_idname, hotkey, "PRESS", shift=modifier, alt=True)
+        kmi = km.keymap_items.new(HighlightOperator.bl_idname, hotkey, "PRESS", alt=True)
         kmi.properties.channel_name = channel_name
-        kmi.properties.modifier = modifier
         addon_keymaps.append((km, kmi))
 
 def unregister():
