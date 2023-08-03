@@ -80,16 +80,19 @@ def highlight_channel(channel_name, modifier):
             # - and then filter based on channel.data_path and channel.array_index
             channel = CHANNELS[channel_name]
             match = (fc.data_path.endswith(channel[0]) and (fc.array_index == channel[1])) # endswith is required for bones
-            invert = (channel_name == "None") # Invert in case of None
-            # Aside from matching or not, there is 4 different behaviors
-            # depending on the value of modifier and invert
-            highlight = match ^ invert # Invert matching result if clearing highlight
-            if (not invert) and (not highlight) and modifier:
-                # If channel_name is not None, skip unmatched when modifier is True (i.e., when shift is pressed)
+            if channel_name == "None":
+                fc.select = False
+                fc.lock = fc.hide = modifier
                 continue
-            fc.select = highlight and (not invert) # Unselect if clearing highlight
-            fc.lock = (not highlight) ^ (modifier and invert) # Lock if clearing highlight when modifier is True
-            fc.hide = (not highlight) ^ (modifier and invert) # Hide if clearing highlight when modifier is True
+            if modifier:
+                if not match:
+                    continue
+                fc.select = not fc.select
+                fc.lock = not fc.lock
+                fc.hide = not fc.hide
+            else:
+                fc.select = match
+                fc.lock = fc.hide = not match
 
 class HighlightOperator(bpy.types.Operator):
     bl_idname = "highlight_channels.highlight_channels"
