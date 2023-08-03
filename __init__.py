@@ -39,7 +39,6 @@ import bpy
 
 CHANNELS = {
     # channel_name: (data_path, array_index)
-    "None":             ("", -1),
     "X Location":       ("location", 0),
     "Y Location":       ("location", 1),
     "Z Location":       ("location", 2),
@@ -53,7 +52,6 @@ CHANNELS = {
 
 OPERATORS = (
     # (text, channel_name, hotkey)
-    ("Clear Highlight",            "None",             "V"),
     ("Highlight X Location",       "X Location",       "Q"),
     ("Highlight Y Location",       "Y Location",       "W"),
     ("Highlight Z Location",       "Z Location",       "E"),
@@ -63,30 +61,45 @@ OPERATORS = (
     ("Highlight X Scale",          "X Scale",          "Z"),
     ("Highlight Y Scale",          "Y Scale",          "X"),
     ("Highlight Z Scale",          "Z Scale",          "C"),
+    ("Clear Highlight",            "(Clear)",          "V"),
+    ("Highlight Translations",     "(Loc)",            "T"),
+    ("Highlight Rotations",        "(Rot)",            "R"),
+    ("Highlight Scales",           "(Scale)",          "F"),
 )
 
 def highlight_channel(channel_name):
-    def fc_match(fc, channel_name):
-        """Check if the fcurve matches the channel name"""
-        channel = CHANNELS[channel_name]
-        return (fc.data_path.endswith(channel[0]) and (fc.array_index == channel[1])) # endswith is required for bones
+    def fc_match(fc, channel_names):
+        """Check if the fcurve matches the channel names"""
+        channels = [CHANNELS[channel_name] for channel_name in channel_names]
+        return any(
+            fc.data_path.endswith(channel[0]) and fc.array_index == channel[1] # endswith is required for bones
+            for channel in channels
+        )
     fcurves = [
         fc
         for selected_object in bpy.context.selected_objects
         if selected_object.animation_data and (action := selected_object.animation_data.action)
         for fc in action.fcurves
     ]
-    is_all_hidden = all(fc.hide for fc in fcurves)
-    is_some_targets_hidden = any(fc.hide and fc_match(fc, channel_name) for fc in fcurves)
-    for fc in fcurves:
-        # Loop through all fcurves, select/hide according to whether the channel name matches or not
-        if channel_name == "None":
-            # Case 1: Toggle highlight of all channels
+    if channel_name == "(Clear)":
+        # Case 1: Toggle highlight of all channels
+        is_all_hidden = all(fc.hide for fc in fcurves)
+        for fc in fcurves:
             fc.select = False
             fc.hide = not is_all_hidden
-            continue
-        # Case 2: Toggle highlight of a specific channel
-        if fc_match(fc, channel_name):
+        return
+    elif channel_name == "(Loc)":
+        channel_names = ["X Location", "Y Location", "Z Location"]
+    elif channel_name == "(Rot)":
+        channel_names = ["X Euler Rotation", "Y Euler Rotation", "Z Euler Rotation"]
+    elif channel_name == "(Scale)":
+        channel_names = ["X Scale", "Y Scale", "Z Scale"]
+    else:
+        channel_names = [channel_name]
+    # Case 2: Toggle highlight of a specific channel
+    is_some_targets_hidden = any(fc.hide and fc_match(fc, channel_names) for fc in fcurves)
+    for fc in fcurves:
+        if fc_match(fc, channel_names):
             fc.select = is_some_targets_hidden
             fc.hide = not is_some_targets_hidden
 
