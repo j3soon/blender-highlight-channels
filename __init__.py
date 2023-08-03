@@ -25,7 +25,7 @@ bl_info = {
     "description": "Highlight the specified animation channels across "
         "multiple objects by toggling their visibility.",
     "author": "Johnson Sun, Jenny Sun",
-    "version": (0, 1, 0),
+    "version": (0, 2, 0),
     "blender": (2, 80, 0), # Will not work in Blender 2.79 and earlier versions due to scripting API changes
     "location": "Graph Editor > Channel > Highlight Channels",
     "doc_url": "https://github.com/j3soon/blender-highlight-channels",
