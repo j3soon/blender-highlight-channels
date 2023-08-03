@@ -1,6 +1,6 @@
 """
 Highlight the specified animation channels across multiple objects by
-unselecting/hiding all other channels.
+toggling their visibility.
 """
 
 # This file is part of Blender Highlight Channels.
@@ -23,7 +23,7 @@ unselecting/hiding all other channels.
 bl_info = {
     "name": "Highlight Channels",
     "description": "Highlight the specified animation channels across "
-        "multiple objects by unselecting/hiding all other channels.",
+        "multiple objects by toggling their visibility.",
     "author": "Johnson Sun, Jenny Sun",
     "version": (0, 1, 0),
     "blender": (2, 80, 0), # Will not work in Blender 2.79 and earlier versions due to scripting API changes
@@ -61,7 +61,7 @@ OPERATORS = (
     ("Highlight X Scale",          "X Scale",          "Z"),
     ("Highlight Y Scale",          "Y Scale",          "X"),
     ("Highlight Z Scale",          "Z Scale",          "C"),
-    ("Clear Highlight",            "(Clear)",          "V"),
+    ("Clear Highlight",            "(Clear)",          "F"),
 )
 
 def highlight_channel(channel_name):
