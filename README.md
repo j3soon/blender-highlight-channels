@@ -1,5 +1,8 @@
 # Blender Highlight Channels
 
+[![GitHub Release](https://img.shields.io/github/v/release/j3soon/blender-highlight-channels?logo=github&display_name=release&style=flat-square)](https://github.com/j3soon/blender-highlight-channels/releases)
+[![YouTube](https://img.shields.io/badge/YouTube-ff0101?logo=youtube&style=flat-square)](https://youtu.be/5GYHgBsQPRo)
+
 Highlight the specified animation channels across multiple objects by toggling their visibility (works on Blender 2.80+).
 
 When editing an animation, it is often necessary to make adjustments to certain channels (e.g., Rotation X) of multiple bones. To ensure that only the relevant curves are visible in the Graph Editor, it is required to select the corresponding channels for all bones and hide the unselected channels. To automate this repetitive task, this add-on provides various hotkeys for quickly highlighting the specified channels across all selected objects.
@@ -7,6 +10,10 @@ When editing an animation, it is often necessary to make adjustments to certain 
 This add-on has the same purpose as the [`Select Attributes`](https://help.autodesk.com/view/MAYAUL/2023/ENU/?guid=GUID-4C99B1CD-442F-4D15-AFB7-FF8D802B4D00#GUID-4C99B1CD-442F-4D15-AFB7-FF8D802B4D00__d1829e708) tool in Maya, while Maya exposes these operations through an GUI instead of hotkeys.
 
 ![](docs/images/maya-select-attributes.png)
+
+## Video Tutorial
+
+[![](https://img.youtube.com/vi/5GYHgBsQPRo/0.jpg)](https://www.youtube.com/watch?v=5GYHgBsQPRo "Boost Your Animation Workflow: A Guide to Blender Highlight Channels Addon")
 
 ## Preview
 
