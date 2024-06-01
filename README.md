@@ -75,3 +75,7 @@ A simple testcase can be found in [testcases/testcase.blend](testcases/testcase.
 
 - If Blender supports hiding the channel entry from the `Animation Channels` panel (as when using filtering) in the future, we may consider hiding all unhighlighted channel entries to save space.
 - In the future, if Blender supports [Stacked mode for curves in Graph Editor](https://projects.blender.org/blender/blender/issues/71238), we may activate stacked mode for the highlighted channels.
+
+## Contributors
+
+[@j3soon](https://github.com/j3soon) and [@chickenfishoil](https://www.youtube.com/@chickenfishoil).
