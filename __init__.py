@@ -5,7 +5,7 @@ toggling their visibility.
 
 # This file is part of Blender Highlight Channels.
 #
-# Copyright (c) 2023 Johnson Sun
+# Copyright (c) 2023-2024 Johnson Sun
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,23 +45,31 @@ CHANNELS = {
     "X Euler Rotation": ("rotation_euler", 0),
     "Y Euler Rotation": ("rotation_euler", 1),
     "Z Euler Rotation": ("rotation_euler", 2),
+    "W Quaternion Rotation": ("rotation_quaternion", 0),
+    "X Quaternion Rotation": ("rotation_quaternion", 1),
+    "Y Quaternion Rotation": ("rotation_quaternion", 2),
+    "Z Quaternion Rotation": ("rotation_quaternion", 3),
     "X Scale":          ("scale", 0),
     "Y Scale":          ("scale", 1),
     "Z Scale":          ("scale", 2),
 }
 
 OPERATORS = (
-    # (text, channel_name, hotkey)
-    ("Highlight X Location",       "X Location",       "Q"),
-    ("Highlight Y Location",       "Y Location",       "W"),
-    ("Highlight Z Location",       "Z Location",       "E"),
-    ("Highlight X Euler Rotation", "X Euler Rotation", "A"),
-    ("Highlight Y Euler Rotation", "Y Euler Rotation", "S"),
-    ("Highlight Z Euler Rotation", "Z Euler Rotation", "D"),
-    ("Highlight X Scale",          "X Scale",          "Z"),
-    ("Highlight Y Scale",          "Y Scale",          "X"),
-    ("Highlight Z Scale",          "Z Scale",          "C"),
-    ("Clear Highlight",            "(Clear)",          "F"),
+    # (text, channel_name, hotkey, alt_or_shift)
+    ("Highlight X Location",       "X Location",       "Q", "Alt"),
+    ("Highlight Y Location",       "Y Location",       "W", "Alt"),
+    ("Highlight Z Location",       "Z Location",       "E", "Alt"),
+    ("Highlight X Euler Rotation", "X Euler Rotation", "A", "Alt"),
+    ("Highlight Y Euler Rotation", "Y Euler Rotation", "S", "Alt"),
+    ("Highlight Z Euler Rotation", "Z Euler Rotation", "D", "Alt"),
+    ("Highlight W Quaternion Rotation", "W Quaternion Rotation", "A", "Shift"),
+    ("Highlight X Quaternion Rotation", "X Quaternion Rotation", "S", "Shift"),
+    ("Highlight Y Quaternion Rotation", "Y Quaternion Rotation", "D", "Shift"),
+    ("Highlight Z Quaternion Rotation", "Z Quaternion Rotation", "F", "Shift"),
+    ("Highlight X Scale",          "X Scale",          "Z", "Alt"),
+    ("Highlight Y Scale",          "Y Scale",          "X", "Alt"),
+    ("Highlight Z Scale",          "Z Scale",          "C", "Alt"),
+    ("Clear Highlight",            "(Clear)",          "F", "Alt"),
 )
 
 def highlight_channel(channel_name):
@@ -104,7 +112,7 @@ class HighlightMenu(bpy.types.Menu):
 
     def draw(self, context):
         layout: bpy.types.UILayout = self.layout
-        for (text, channel_name, hotkey) in OPERATORS:
+        for (text, channel_name, hotkey, alt_or_shift) in OPERATORS:
             op = layout.operator(
                 HighlightOperator.bl_idname,
                 text=text,
@@ -142,10 +150,15 @@ def register():
         ("Animation Channels", "EMPTY"), # The right-hand side that displays all channels
         ("Graph Editor", "GRAPH_EDITOR"), # The middle section that displays the curves
     ]
-    for (text, channel_name, hotkey), (name, space_type) in \
+    for (text, channel_name, hotkey, alt_or_shift), (name, space_type) in \
         list(itertools.product(OPERATORS, name_and_space_types)):
         km = wm.keyconfigs.addon.keymaps.new(name=name, space_type=space_type)
-        kmi = km.keymap_items.new(HighlightOperator.bl_idname, hotkey, "PRESS", alt=True)
+        if alt_or_shift == "Alt":
+            kmi = km.keymap_items.new(HighlightOperator.bl_idname, hotkey, "PRESS", alt=True)
+        elif alt_or_shift == "Shift":
+            kmi = km.keymap_items.new(HighlightOperator.bl_idname, hotkey, "PRESS", alt=True, shift=True)
+        else:
+            raise ValueError(f"Invalid alt_or_shift: {alt_or_shift}")
         kmi.properties.channel_name = channel_name
         addon_keymaps.append((km, kmi))
 

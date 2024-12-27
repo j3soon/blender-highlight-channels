@@ -41,6 +41,7 @@ To highlight a channel across all selected objects, select one or more objects i
 
 - `Alt` + {`Q`, `W`, `E`}: Toggle the highlighting state of the {`X Location`, `Y Location`, `Z Location`} channels.
 - `Alt` + {`A`, `S`, `D`}: Toggle the highlighting state of the {`X Euler Rotation`, `Y Euler Rotation`, `Z Euler Rotation`} channels.
+- `Alt` + `Shift` + {`A`, `S`, `D`, `F`}: Toggle the highlighting state of the {`W Quaternion Rotation`, `X Quaternion Rotation`, `Y Quaternion Rotation`, `Z Quaternion Rotation`} channels.
 - `Alt` + {`Z`, `X`, `C`}: Toggle the highlighting state of the {`X Scale`, `Y Scale`, `Z Scale`} channels.
 - `Alt` + `F`: Toggle the visibility of all channels and unselect them.
 
